@@ -1,4 +1,4 @@
-#include <iostream>
+#include <stdio.h>
 #include <stdlib.h>
 void quit()
 {
@@ -6,60 +6,93 @@ void quit()
 }
 void hello()
 {
-    cout<<"hello word!"<<endl;
+    printf("hello word!\n");
 }
 void help()
 {
-    cout<<"You can read the documention to get help."<<endl;
+    printf("You can read the documention to get help.\n");
 }
 void add()
 {
     double a,b,sum;
-    cout<<"please input two numbers:"<<endl;
-    cin>>a>>b;
+    printf("please input two numbers:\n");
+    scanf("%lf %lf",&a,&b);
     sum=a+b;
-    cout<<a<<"+"<<b<<"="<<sum<<endl;
+    printf("%lf+%lf=%lf\n",a,b,sum);
 }
 void sub()
 {
     double a,b,dif;
-    cout<<"please intput two numbers:"<<endl;
-    cin>>a>>b;
+    printf("please intput two numbers:\n");
+    scanf("%lf %lf",&a,&b);
     dif=a-b;
-    cout<<a<<"-"<<b<<"="<<dif<<endl;
+    printf("%lf-%lf=%lf\n",a,b,dif);
 }
 void multi()
 {
     double a,b,pro;
-    cout<<"please input two numbers:"<<endl;
-    cin>>a>>b;
+    printf("please input two numbers:\n");
+    scanf("%lf %lf",&a,&b);
     pro=a*b;
-    cout<<a<<"*"<<b<<"="<<pro<<endl;
+    printf("%lf*%lf=%lf\n",a,b,pro);
 }
-void div()
+void divi()
 {
     double a,b,div;
-    cout<<"please input two numbers:"<<endl;
-    cin>>a>>b;
+    printf("please input two numbers:\n");
+    scanf("%lf %lf",&a,&b);
     if(b==0)
     {
-        cout<<"Error:divisor can not be zero!"<<endl;
+        printf("Error:divisor can not be zero!\n");
     }
     else
     {
         div=a/b;
-        cout<<a<<"/"<<b<<"="<<div<<endl; 
+        printf("%lf/%lf=%lf\n",a,b,div); 
     }
 }
 void bigger()
 {
     double a,b,bigger;
-    cout<<"please input two numbers:"<<endl;
-    cin>>a>>b;
+    printf("please input two numbers:\n");
+    scanf("%lf %lf",&a,&b);
     bigger=a>b?a:b;
-    cout<<bigger<<"is bigger than the other."<<endl;
+    printf("is bigger than the other.\n");
 }
 void main()
 {
-    
+    char cmd[256];
+    while(1)
+    {
+        scanf("%s",cmd);
+        if(strcmp(cmd,"hello") == 0)
+	{
+	    hello();
+	}
+        else if(strcmp(cmd,"quit") == 0)
+	{
+	    quit();
+	}
+	else if(strcmp(cmd,"add") == 0)
+	{
+	    add();
+	}
+	else if(strcmp(cmd,"sub") == 0)
+	{
+	    sub();
+	}
+	else if(strcmp(cmd,"multi") == 0)
+	{
+	    multi();
+	}
+	else if(strcmp(cmd,"divi") == 0)
+	{
+	    divi();
+	}
+	else
+	{
+	    printf("Error Command!\n\n");
+	    help();
+	}
+    }
 }
