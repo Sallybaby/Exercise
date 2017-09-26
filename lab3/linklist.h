@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typdef struct DataNode
+typedef struct DataNode
 {
     char* cmd;
     char* desc;
