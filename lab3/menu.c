@@ -12,9 +12,9 @@ int quit();
 static tDataNode head[]=
 {
     {"help","This is help information!",help,&head[1]},
-    {"version","Menu program for lab3",help,%head[2]},
+    {"version","Menu program for lab3",help,&head[2]},
     {"setting","This is setting function",help,&head[3]},
-    {"quit","Quit",quit,Null}
+    {"quit","Quit",quit,NULL}
 };
 
 int main()
