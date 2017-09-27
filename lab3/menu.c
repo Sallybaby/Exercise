@@ -6,15 +6,12 @@
 #define DESC_LEN 1024
 #define CMD_NUM 10
 
-int help();
-int quit();
 
+int help();
 static tDataNode head[]=
 {
     {"help","This is help information!",help,&head[1]},
-    {"version","Menu program for lab3",help,&head[2]},
-    {"setting","This is setting function",help,&head[3]},
-    {"quit","Quit",quit,NULL}
+    {"verison","menu program v1.0",NULL,NULL}
 };
 
 int main()
@@ -30,7 +27,7 @@ int main()
 	    printf("ERROE:cmd not found!\n");
 	    continue;
 	}
-	printf("%s :%s \n",p->cmd,p->desc);
+	printf("%s - %s \n",p->cmd,p->desc);
         if(p->handler != NULL)
 	{
 	    p->handler();
@@ -45,7 +42,18 @@ int help()
     return 0;
 }
 
-int quit()
+void quit()
 {
     exit(0);
 }
+void info()
+{
+    printf("Author:Yu Xufeng\nProgram Version:1.0\n");
+}
+void echo()
+{
+    char command[CMD_MAX_LEN];
+    scanf("%s",command);
+    printf("%s\n",command);
+}
+
