@@ -2,16 +2,18 @@
 #include <stdlib.h>
 #include "linklist.h"
 
+
 #define CMD_MAX_LEN 128
 #define DESC_LEN 1024
 #define CMD_NUM 10
 
-
+void quit();
 int help();
 static tDataNode head[]=
 {
     {"help","This is help information!",help,&head[1]},
-    {"verison","menu program v1.0",NULL,NULL}
+    {"version","menu program v1.0",NULL,&head[2]},
+    {"quit","Exit the program",quit,NULL}
 };
 
 int main()
@@ -21,7 +23,7 @@ int main()
 	char cmd[CMD_MAX_LEN];
 	printf("please input the cmd >");
 	scanf("%s",cmd);
-	tDataNode *p = findCmd(head,cmd);
+	tDataNode *p = FindCmd(head,cmd);
 	if(p == NULL)
 	{
 	    printf("ERROE:cmd not found!\n");
@@ -46,14 +48,3 @@ void quit()
 {
     exit(0);
 }
-void info()
-{
-    printf("Author:Yu Xufeng\nProgram Version:1.0\n");
-}
-void echo()
-{
-    char command[CMD_MAX_LEN];
-    scanf("%s",command);
-    printf("%s\n",command);
-}
-

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "linklist.h"
 
-tDataNode *findcmd(tDataNode *head,char *cmd)
+tDataNode *FindCmd(tDataNode *head,char *cmd)
 {
     if(head == NULL || cmd == NULL)
     {
