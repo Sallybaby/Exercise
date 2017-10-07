@@ -1,142 +1,137 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include"linktable.h"
-void InitMenuData(tLinkTable ** pLinkTable);
-int HelpFunc();
-int HelloFunc();
-int QuitFunc();
-int GreaterFunc();
-int SmallerFunc();
-int PlusFunc();
-int MinusFunc();
-int MultiplyFunc();
-#define CMD_MAX_LEN     128
-#define DESC_LEN    1024
-#define CMD_NUM        10
-tLinkTable * head=NULL;
-/* Menu program */
-int main()
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include "linktable.h"
+
+#define CMD_NUM 10
+#define CMD_MAX_LEN 128
+#define CMD_ANNO_LEN 1024
+
+typedef struct data_node {
+    link_table_node* next;
+    char* cmd_name;
+    char* cmd_annotation;
+    int (*handler)();
+} data_node;
+
+int init_menu();
+data_node* search_cmd(link_table* head, char* cmd);
+int show_all_cmd(link_table* head);
+int cmd_help();
+int cmd_version();
+int cmd_quit();
+int cmd_others();
+
+link_table* head = NULL;
+
+int main(void)
 {
-    char *cmd;
-    tDataNode *cmd_pointer;
-    InitMenuData(&head);
-    printf("Computer common cmd:\n");
-    printf("help\thello\tquit\tgreater\tsmaller\tplus\tminus\tmultiply\n");
-    while(1)
+    char cmd[CMD_MAX_LEN];
+
+    init_menu(&head);
+
+    while (true)
     {
-    printf("Please input cmd:\n");
-    scanf("%s",cmd);
-    cmd_pointer=FindCmd(head,cmd);
-    if(cmd_pointer == NULL)
+        printf("please input your command > ");
+        scanf("%s", cmd);
+
+        data_node* ptr = search_cmd(head, cmd);
+
+        if (ptr == NULL)
+        {
+            printf("ERROR command: '%s'\n", cmd);
+            continue;
+        }
+
+        printf("%s\n", ptr->cmd_annotation);
+        if (ptr->handler != NULL)
+        {
+            ptr->handler();
+        } 
+
+    }
+
+    return 0;
+}
+
+int init_menu(link_table** pp_table)
+{
+    *pp_table = creat_link_table();
+
+    data_node* node = (data_node*)malloc(sizeof(data_node)); 
+    node->cmd_name = "help";
+    node->cmd_annotation = "you can see help list.";
+    node->handler = cmd_help;
+    add_link_table_node(*pp_table, (link_table_node*)node);
+
+    node = (data_node*)malloc(sizeof(data_node));
+    node->cmd_name = "version";
+    node->cmd_annotation = "menu program v2.5.4";
+    node->handler = NULL;
+    add_link_table_node(*pp_table, (link_table_node*)node);
+
+    node = (data_node*)malloc(sizeof(data_node));
+    node->cmd_name = "quit";
+    node->cmd_annotation = "you quit the menu program.";
+    node->handler = cmd_quit;
+    add_link_table_node(*pp_table, (link_table_node*)node);
+
+    node = (data_node*)malloc(sizeof(data_node));
+    node->cmd_name = "others";
+    node->cmd_annotation = "This is 'others' command.";
+    node->handler = NULL;
+    add_link_table_node(*pp_table, (link_table_node*)node);
+
+    node = (data_node*)malloc(sizeof(data_node));
+    node->cmd_name = "ls";
+    node->cmd_annotation = "This is 'ls' command.";
+    node->handler = NULL;
+    add_link_table_node(*pp_table, (link_table_node*)node);
+
+    return 0;
+}
+
+data_node* search_cmd(link_table* head, char* cmd)
+{
+    data_node* ptr_node = (data_node*)get_link_table_head(head);
+    while (ptr_node != NULL)
+    {   
+        if (strcmp(ptr_node->cmd_name, cmd) == 0)
+        {
+            return ptr_node;
+        }
+        ptr_node = (data_node*)get_next_link_table_node(head, (link_table_node*)ptr_node);
+    }
+
+    return NULL;
+}
+
+int show_all_cmd(link_table* head)
+{
+    data_node* ptr_node = (data_node*)get_link_table_head(head);
+    while (ptr_node != NULL)
     {
-            printf("The cmd is not copmuter common cmd or it is wrong £¡\n");
-        continue;
+        printf("%s\t - \t%s\n", ptr_node->cmd_name, ptr_node->cmd_annotation);
+        ptr_node = (data_node*)get_next_link_table_node(head, (link_table_node*)ptr_node);
     }
-    cmd_pointer->hindler();
-    }
+    return 0;
 }
-void InitMenuData(tLinkTable ** pLinkTable)
+
+int cmd_help()
 {
-    *pLinkTable = CreateLinkTable();
-    tDataNode * pNode=(tDataNode *)malloc(sizeof(tDataNode));
-    pNode->cmd="help";
-    pNode->desc="This is a help cmd.";
-    pNode->hindler=HelpFunc;
-    AddLinkTableNode(*pLinkTable,(tLinkTableNode *) pNode);
-    pNode=(tDataNode *)malloc(sizeof(tDataNode));
-    pNode->cmd="hello";
-    pNode->desc="This is a hello cmd.";
-    pNode->hindler=HelloFunc;
-    AddLinkTableNode(*pLinkTable,(tLinkTableNode *) pNode);
-    pNode=(tDataNode *)malloc(sizeof(tDataNode));
-    pNode->cmd="quit";
-    pNode->desc="Quit the program.";
-    pNode->hindler=QuitFunc;
-    AddLinkTableNode(*pLinkTable,(tLinkTableNode *) pNode);
-    pNode=(tDataNode *)malloc(sizeof(tDataNode));
-    pNode->cmd="greater";
-    pNode->desc="Find greater data between two datas.";
-    pNode->hindler=GreaterFunc;
-    AddLinkTableNode(*pLinkTable,(tLinkTableNode *) pNode);
-    pNode=(tDataNode *)malloc(sizeof(tDataNode));
-    pNode->cmd="smaller";
-    pNode->desc="Find smaller data between two datas.";
-    pNode->hindler=SmallerFunc;
-    AddLinkTableNode(*pLinkTable,(tLinkTableNode *) pNode);
-    pNode=(tDataNode *)malloc(sizeof(tDataNode));
-    pNode->cmd="plus";
-    pNode->desc="Get sum about two datas.";
-    pNode->hindler=PlusFunc;
-    AddLinkTableNode(*pLinkTable,(tLinkTableNode *) pNode);
-    pNode=(tDataNode *)malloc(sizeof(tDataNode));
-    pNode->cmd="minus";
-    pNode->desc="Get sub about two datas.";
-    pNode->hindler=MinusFunc;
-    AddLinkTableNode(*pLinkTable,(tLinkTableNode *) pNode);
-    pNode=(tDataNode *)malloc(sizeof(tDataNode));
-    pNode->cmd="multiply";
-    pNode->desc="Get mul about two datas.";
-    pNode->hindler=MultiplyFunc;
-    AddLinkTableNode(*pLinkTable,(tLinkTableNode *) pNode);
+    printf("------------------------------------------\n");
+    show_all_cmd(head);
+    printf("------------------------------------------\n");
+    return 0;
 }
-int HelpFunc()
+
+int cmd_version()
 {
-    printf("This is help!\n");
-    return 1;
+    return 0;
 }
-int HelloFunc()
-{
-    printf("Hello! You are the best!"); 
-    return 1;
-}
-int QuitFunc()
+
+int cmd_quit()
 {
     exit(0);
-    return 1;
-}
-int GreaterFunc()
-{
-    int a,b,c;
-    scanf("%d",&a);
-    scanf("%d",&b);
-    c=a>b?a:b;
-    printf("The greater one is %d",c);
-    return 1;
-}
-int SmallerFunc()
-{
-    int a,b,c;
-    scanf("%d",&a);
-    scanf("%d",&b);
-    c=a>b?b:a;
-    printf("The smaller one is %d",c);
-    return 1;
-}
-int PlusFunc()
-{
-    int a,b,c;
-    scanf("%d",&a);
-    scanf("%d",&b);
-    c=a+b;
-    printf("The result is %d",c);
-    return 1;
-}
-int MinusFunc()
-{
-    int a,b,c;
-    scanf("%d",&a);
-    scanf("%d",&b);
-    c=a-b;
-    printf("The result is %d",c);
-    return 1;
-}  
-int MultiplyFunc()
-{
-    int a,b,c;
-    scanf("%d",&a);
-    scanf("%d",&b);
-    c=a*b;
-    printf("The result is %d",c);
-    return 1;
 }
