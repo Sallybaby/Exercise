@@ -1,147 +1,135 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "linktable.h"
-
-link_table* creat_link_table()
+#include<stdlib.h>
+#include<stdio.h>
+#include"linktable.h"
+tLinkTable *CreateLinkTable()
 {
-    link_table* ptr_link_table = (link_table*)malloc(sizeof(link_table));
-    if (ptr_link_table == NULL)
+    tLinkTable *pLinkTable = (tLinkTable*)malloc(sizeof(tLinkTable));
+    if(pLinkTable == NULL)
     {
         return NULL;
-    }  
-
-    ptr_link_table->ptr_head = NULL;
-    ptr_link_table->ptr_tail = NULL;
-    ptr_link_table->sum_of_nodes = 0;
-
-    return ptr_link_table;
+    }
+    pLinkTable->pHead = NULL;
+    pLinkTable->pTail = NULL;
+    pLinkTable->SumOfNode = 0;
+    return pLinkTable;
 }
-
-int delete_link_table(link_table* ptr_link_table)
+int DeleteLinkTable(tLinkTable * pLinkTable)
 {
-    if (ptr_link_table == NULL)
+    if(pLinkTable==NULL)
     {
         return FAILURE;
     }
-
-    while (ptr_link_table->ptr_head != NULL)
+    while(pLinkTable->pHead != NULL)
     {
-        link_table_node* ptr_node = ptr_link_table->ptr_head;
-        ptr_link_table->ptr_head = ptr_link_table->ptr_head->ptr_next;
-        free(ptr_node);
-        ptr_link_table->sum_of_nodes -= 1;            
+        tLinkTableNode *tmp = pLinkTable->pHead;
+        pLinkTable->pHead = pLinkTable->pHead->pNext;
+        free(tmp);
     }
-
-    ptr_link_table->ptr_head = NULL;
-    ptr_link_table->ptr_tail = NULL;
-    free(ptr_link_table);
-    return SUCCESS;
+    pLinkTable->pHead = NULL;
+    pLinkTable->pTail = NULL;
+    pLinkTable->SumOfNode = -1;
+    free(pLinkTable);  
+    return SUCCESS;   
 }
-
-
-int add_link_table_node(link_table* ptr_link_table, link_table_node* ptr_node)
+int AddLinkTableNode(tLinkTable * pLinkTable,tLinkTableNode * pNode)
 {
-    if (ptr_link_table == NULL || ptr_node == NULL)
+    tLinkTableNode *p=NULL;
+    tLinkTableNode *temp=NULL;
+    p=pLinkTable->pHead;
+    if(p == NULL)
     {
-        return FAILURE;
+        pLinkTable->pHead=pNode;
+        pLinkTable->pTail=pNode;
+        pLinkTable->SumOfNode++;
+        pNode->pNext=NULL;
+        return 0;
     }
-
-    ptr_node->ptr_next = NULL;
-    if (ptr_link_table->ptr_head == NULL)
+    pLinkTable->pTail->pNext=pNode;
+    pLinkTable->pTail=pNode;
+    pNode->pNext=NULL;
+    pLinkTable->SumOfNode++;
+    return 0;      
+}
+int DeleteLinkTableNode(tLinkTable * pLinkTable,tLinkTableNode *pNode)
+{
+    tLinkTableNode * p;
+    p=pLinkTable->pHead;
+    if(pLinkTable->pHead == NULL)
     {
-        ptr_link_table->ptr_head = ptr_node;
+    return 0;
     }
-
-    if (ptr_link_table->ptr_tail == NULL)
+    if(pLinkTable->pHead == pLinkTable->pTail && pLinkTable->pHead != NULL)
     {
-        ptr_link_table->ptr_tail = ptr_node;
+    free(pNode);
+        pLinkTable->pHead=NULL;
+        pLinkTable->pTail=NULL;
+        pLinkTable->SumOfNode--;
+        return 0;
+    }
+    if(pLinkTable->pHead != pLinkTable->pTail && pLinkTable->pTail == pNode)
+    {
+    free(pNode);
+        while(p->pNext != NULL)
+    {
+        p=p->pNext;
+    }
+    pLinkTable->pTail=p;
+    p->pNext=NULL;
+        pLinkTable->SumOfNode--;
+        return 0;           
+    }
+    if(pLinkTable->pHead != pLinkTable->pTail && pLinkTable->pHead == pNode)
+    {
+    pLinkTable->pHead=pLinkTable->pHead->pNext;
+        free(pNode);
+        pLinkTable->SumOfNode--;
+        return 0;
     }
     else
     {
-        ptr_link_table->ptr_tail->ptr_next = ptr_node;
-        ptr_link_table->ptr_tail = ptr_node;
-    }
-    ptr_link_table->sum_of_nodes += 1;
-
-    return SUCCESS;
-}
-
-int del_link_table_node(link_table* ptr_link_table, link_table_node* ptr_node)
-{
-    if (ptr_link_table == NULL || ptr_node == NULL)
-    {
-        return FAILURE;
-    }
-
-    // handler head == ptr_node:
-    if (ptr_link_table->ptr_head == ptr_node)
-    {
-        ptr_link_table->ptr_head = ptr_link_table->ptr_head->ptr_next;
-        ptr_link_table->sum_of_nodes -= 1;
-
-        if (ptr_link_table->sum_of_nodes == 0)
+        while(p->pNext != pNode);
         {
-            ptr_link_table->ptr_tail = NULL;
-        }       
-        return SUCCESS;
-    }    
-
-    link_table_node* ptr = ptr_link_table->ptr_head;
-    while (ptr != NULL)
-    {
-        if (ptr->ptr_next == ptr_node)
-        {
-            ptr->ptr_next = ptr->ptr_next->ptr_next;
-            ptr_link_table->sum_of_nodes -= 1;
-
-            if (ptr_link_table->sum_of_nodes == 0)
-            {
-                ptr_link_table->ptr_tail = NULL;
-            }
-            return SUCCESS;            
+            p=p->pNext;
         }
-        ptr = ptr->ptr_next;
-    }
-
-    return FAILURE;
+            p->pNext=p->pNext->pNext;
+            pLinkTable->SumOfNode--;
+            return 0;
+    }  
 }
-
-link_table_node* get_link_table_head(link_table* ptr_link_table)
+tLinkTableNode * GetLinkTableHead(tLinkTable * pLinkTable)
 {
-    if (ptr_link_table == NULL || ptr_link_table->ptr_head == NULL)
-    {
-        return NULL;        
-    }
-
-    return ptr_link_table->ptr_head;
+    return pLinkTable->pHead;
 }
-
-link_table_node* get_link_table_tail(link_table* ptr_link_table)
+tLinkTableNode * GetNextLinkTableNode(tLinkTable * pLinkTable,tLinkTableNode * pNode)
 {
-    if (ptr_link_table == NULL || ptr_link_table->ptr_tail == NULL)
-    {
-        return NULL;
-    }    
-
-    return ptr_link_table->ptr_tail;
+    return pNode->pNext;
 }
-
-link_table_node* get_next_link_table_node(link_table* ptr_link_table, link_table_node* ptr_node)
+tDataNode* FindCmd(tLinkTable * head,char * cmd)
 {
-    if (ptr_link_table == NULL || ptr_node == NULL)
+    tDataNode *p=(tDataNode *)GetLinkTableHead(head);
+    if(head == NULL || cmd == NULL)
     {
-        return NULL;
-    }
-
-    link_table_node* ptr = ptr_link_table->ptr_head;
-    while (ptr != NULL)
-    {
-        if (ptr == ptr_node)
-        {
-            return ptr->ptr_next;
-        }
-
-        ptr = ptr->ptr_next;
-    }
     return NULL;
+    }
+    while(p != NULL)
+    {
+    if(strcmp(p->cmd,cmd) == 0)
+    {
+        return p;
+    }
+    p=(tDataNode *)GetNextLinkTableNode(head,(tLinkTableNode *)p);
+    }
+    return p;
+}
+int ShowAllCmd(tLinkTable * head)
+{
+    tDataNode *p=NULL;
+    printf("Menu list:\n");
+    p=(tDataNode *)head->pHead;;
+    while(p != NULL)
+    {
+        printf("%s:\t %s\n",p->cmd,p->desc);
+        p=(tDataNode *)p->pNext;
+    }
+    return 0;
 }
