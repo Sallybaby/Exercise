@@ -6,7 +6,7 @@ void InitMenuData(tLinkTable ** pLinkTable);
 int HelpFunc();
 int HelloFunc();
 int QuitFunc();
-int GreaterFunc();
+int BiggerFunc();
 int SmallerFunc();
 int PlusFunc();
 int MinusFunc();
@@ -22,7 +22,7 @@ int main()
     tDataNode *cmd_pointer;
     InitMenuData(&head);
     printf("Computer common cmd:\n");
-    printf("help\thello\tquit\tgreater\tsmaller\tplus\tminus\tmultiply\n");
+    printf("help\thello\tquit\tbigger\tsmaller\tplus\tminus\tmultiply\n");
     while(1)
     {
     printf("Please input cmd:\n");
@@ -35,6 +35,7 @@ int main()
     }
     cmd_pointer->hindler();
     }
+    return 0;
 }
 void InitMenuData(tLinkTable ** pLinkTable)
 {
@@ -55,9 +56,9 @@ void InitMenuData(tLinkTable ** pLinkTable)
     pNode->hindler=QuitFunc;
     AddLinkTableNode(*pLinkTable,(tLinkTableNode *) pNode);
     pNode=(tDataNode *)malloc(sizeof(tDataNode));
-    pNode->cmd="greater";
-    pNode->desc="Find greater data between two datas.";
-    pNode->hindler=GreaterFunc;
+    pNode->cmd="bigger";
+    pNode->desc="Find bigger data between two datas.";
+    pNode->hindler=BiggerFunc;
     AddLinkTableNode(*pLinkTable,(tLinkTableNode *) pNode);
     pNode=(tDataNode *)malloc(sizeof(tDataNode));
     pNode->cmd="smaller";
@@ -87,7 +88,7 @@ int HelpFunc()
 }
 int HelloFunc()
 {
-    printf("Hello! You are the best!"); 
+    printf("Hello! You are the best!\n"); 
     return 1;
 }
 int QuitFunc()
@@ -95,48 +96,53 @@ int QuitFunc()
     exit(0);
     return 1;
 }
-int GreaterFunc()
+int BiggerFunc()
 {
     int a,b,c;
+    printf("Please put two numbers:\n");
     scanf("%d",&a);
     scanf("%d",&b);
     c=a>b?a:b;
-    printf("The greater one is %d",c);
+    printf("The greater one is %d\n",c);
     return 1;
 }
 int SmallerFunc()
 {
     int a,b,c;
+    printf("Please put two numbers:\n");
     scanf("%d",&a);
     scanf("%d",&b);
     c=a>b?b:a;
-    printf("The smaller one is %d",c);
+    printf("The smaller one is %d\n",c);
     return 1;
 }
 int PlusFunc()
 {
     int a,b,c;
+    printf("Please put two numbers:\n");
     scanf("%d",&a);
     scanf("%d",&b);
     c=a+b;
-    printf("The result is %d",c);
+    printf("The result is %d\n",c);
     return 1;
 }
 int MinusFunc()
 {
     int a,b,c;
+    printf("Please put two numbers:\n");
     scanf("%d",&a);
     scanf("%d",&b);
     c=a-b;
-    printf("The result is %d",c);
+    printf("The result is %d\n",c);
     return 1;
 }  
 int MultiplyFunc()
 {
     int a,b,c;
+    printf("Please put two numbers:\n");
     scanf("%d",&a);
     scanf("%d",&b);
     c=a*b;
-    printf("The result is %d",c);
+    printf("The result is %d\n",c);
     return 1;
 }

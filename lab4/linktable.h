@@ -1,3 +1,5 @@
+#include<stdio.h>
+#include<stdlib.h>
 #include<pthread.h>
 #ifndef _LINK_TABLE_H_
 #define _LINK_TABLE_H_
