@@ -1,30 +1,23 @@
-#include<pthread.h>
-#ifndef _LINK_TABLE_H_
-#define _LINK_TABLE_H_
+#ifndef _LINK_TABLE_H
+#define _LINK_TABLE_H
+
+#define FAILURE -1
 #define SUCCESS 0
-#define FAILURE (-1)
-typedef struct LinkTableNode 
-{
-    struct LinkTableNode * pNext;
-}tLinkTableNode;
-typedef struct LinkTable
-{
-    tLinkTableNode  * pHead;
-    tLinkTableNode  * pTail;
-    int             SumOfNode;
-}tLinkTable;
-typedef struct DataNode
-{
-    tLinkTableNode * pNext;
-    const char     *cmd;
-    const char     *desc;
-    int    (*hindler)();
-}tDataNode;
-tLinkTable * createLinkTabel();
-int DeleteLinkTable(tLinkTable * pLinkTable);
-int AddLinkTableNode(tLinkTable * pLinkTable,tLinkTableNode * pNode);
-tLinkTableNode * GetLinkTableHead(tLinkTable * pLinkTable);
-tLinkTableNode * GetNextLinkTableNode(tLinkTable * pLinkTable,tLinkTableNode * pNode);
-tDataNode* FindCmd(tLinkTable * head,char * cmd);
-int ShowAllCmd(tLinkTable * head);
+
+typedef struct link_table_node {
+    struct link_table_node* ptr_next;
+} link_table_node;
+
+typedef struct link_table {
+    link_table_node* ptr_head;
+    int sum_of_nodes;
+} link_table;
+
+link_table* creat_link_table();
+int delete_link_table(link_table* ptr_link_table);
+int add_link_table_node(link_table* ptr_link_table, link_table_node* ptr_node);
+int del_link_table_node(link_table* ptr_link_table, link_table_node* ptr_node);
+link_table_node* get_link_table_head(link_table* ptr_link_table);
+link_table_node* get_next_link_table_node(link_table* ptr_link_table, link_table_node* ptr_node);
+
 #endif
