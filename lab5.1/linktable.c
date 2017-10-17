@@ -22,8 +22,15 @@
 
 #include<stdio.h>
 #include<stdlib.h>
-
 #include"linktable.h"
+
+struct LinkTable
+{
+ tLinkTableNode *pHead;
+ tLinkTableNode *pTail;
+ int         SumOfNode;
+ pthread_mutex_t mutex;
+}
 
 /*
  * Create a LinkTable
@@ -64,7 +71,7 @@ int DeleteLinkTable(tLinkTable *pLinkTable)
     pLinkTable->SumOfNode = 0;
     pthread_mutex_destroy(&(pLinkTable->mutex));
     free(pLinkTable);
-    return SUCCESS;		
+    return SUCCESS;        
 }
 /*
  * Add a LinkTableNode to LinkTable
@@ -92,7 +99,7 @@ int AddLinkTableNode(tLinkTable *pLinkTable,tLinkTableNode * pNode)
     }
     pLinkTable->SumOfNode += 1 ;
     pthread_mutex_unlock(&(pLinkTable->mutex));
-    return SUCCESS;		
+    return SUCCESS;        
 }
 /*
  * Delete a LinkTableNode from LinkTable
@@ -110,7 +117,7 @@ int DelLinkTableNode(tLinkTable *pLinkTable,tLinkTableNode * pNode)
         pLinkTable->SumOfNode -= 1 ;
         if(pLinkTable->SumOfNode == 0)
         {
-            pLinkTable->pTail = NULL;	
+            pLinkTable->pTail = NULL;    
         }
         pthread_mutex_unlock(&(pLinkTable->mutex));
         return SUCCESS;
@@ -124,39 +131,37 @@ int DelLinkTableNode(tLinkTable *pLinkTable,tLinkTableNode * pNode)
             pLinkTable->SumOfNode -= 1 ;
             if(pLinkTable->SumOfNode == 0)
             {
-                pLinkTable->pTail = NULL;	
+                pLinkTable->pTail = NULL;    
             }
             pthread_mutex_unlock(&(pLinkTable->mutex));
-            return SUCCESS;				    
+            return SUCCESS;                    
         }
         pTempNode = pTempNode->pNext;
     }
     pthread_mutex_unlock(&(pLinkTable->mutex));
-    return FAILURE;		
+    return FAILURE;        
 }
-
 /*
  * Search a LinkTableNode from LinkTable
  * int Conditon(tLinkTableNode * pNode);
  */
-tLinkTableNode * SearchLinkTableNode(tLinkTable *pLinkTable, int Conditon(tLinkTableNode * pNode))
+tLinkTableNode * SearchLinkTableNode(tLinkTable *pLinkTable, int Conditon(tLinkTableNode * pNode, void * args), void * args)
 {
     if(pLinkTable == NULL || Conditon == NULL)
     {
         return NULL;
     }
     tLinkTableNode * pNode = pLinkTable->pHead;
-    while(pNode != NULL)
+    while(pNode!=NULL)
     {    
-        if(Conditon(pNode) == SUCCESS)
+        if(Conditon(pNode,args) == SUCCESS)
         {
-            return pNode;				    
+            return pNode;                    
         }
         pNode = pNode->pNext;
     }
     return NULL;
 }
-
 /*
  * get LinkTableHead
  */
@@ -168,7 +173,6 @@ tLinkTableNode * GetLinkTableHead(tLinkTable *pLinkTable)
     }    
     return pLinkTable->pHead;
 }
-
 /*
  * get next LinkTableNode
  */
@@ -183,10 +187,9 @@ tLinkTableNode * GetNextLinkTableNode(tLinkTable *pLinkTable,tLinkTableNode * pN
     {    
         if(pTempNode == pNode)
         {
-            return pTempNode->pNext;				    
+            return pTempNode->pNext;                    
         }
         pTempNode = pTempNode->pNext;
     }
     return NULL;
 }
-
