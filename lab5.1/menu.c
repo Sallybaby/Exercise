@@ -23,18 +23,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "linktable.h"
-
 int Help();
 int Quit();
-
 #define CMD_MAX_LEN 128
 #define DESC_LEN    1024
 #define CMD_NUM     10
-
-char cmd[CMD_MAX_LEN];
-
 /* data struct and its operations */
-
 typedef struct DataNode
 {
     tLinkTableNode * pNext;
@@ -42,23 +36,21 @@ typedef struct DataNode
     char*   desc;
     int     (*handler)();
 } tDataNode;
-
-int SearchCondition(tLinkTableNode * pLinkTableNode)
+int SearchCondition(tLinkTableNode * pLinkTableNode, void * args)
 {
+    char * cmd = (char * )args;
     tDataNode * pNode = (tDataNode *)pLinkTableNode;
     if(strcmp(pNode->cmd, cmd) == 0)
     {
         return  SUCCESS;  
     }
-    return FAILURE;	       
+    return FAILURE;           
 }
-
 /* find a cmd in the linklist and return the datanode pointer */
 tDataNode* FindCmd(tLinkTable * head, char * cmd)
 {
-    return  (tDataNode*)SearchLinkTableNode(head,SearchCondition);
+    return  (tDataNode*)SearchLinkTableNode(head,SearchCondition,(void *)cmd);
 }
-
 /* show all cmd in listlist */
 int ShowAllCmd(tLinkTable * head)
 {
@@ -70,7 +62,6 @@ int ShowAllCmd(tLinkTable * head)
     }
     return 0;
 }
-
 int InitMenuData(tLinkTable ** ppLinktable)
 {
     *ppLinktable = CreateLinkTable();
@@ -81,29 +72,27 @@ int InitMenuData(tLinkTable ** ppLinktable)
     AddLinkTableNode(*ppLinktable,(tLinkTableNode *)pNode);
     pNode = (tDataNode*)malloc(sizeof(tDataNode));
     pNode->cmd = "version";
-    pNode->desc = "Menu Program V1.0";
+    pNode->desc = "Menu V4.0";
     pNode->handler = NULL; 
     AddLinkTableNode(*ppLinktable,(tLinkTableNode *)pNode);
     pNode = (tDataNode*)malloc(sizeof(tDataNode));
     pNode->cmd = "quit";
-    pNode->desc = "Quit from Menu Program V1.0";
+    pNode->desc = "-----Thanks for using-----";
     pNode->handler = Quit; 
     AddLinkTableNode(*ppLinktable,(tLinkTableNode *)pNode);
- 
+
     return 0; 
 }
-
 /* menu program */
-
 tLinkTable * head = NULL;
-
 int main()
 {
     InitMenuData(&head); 
    /* cmd line begins */
     while(1)
     {
-        printf("Input a cmd number > ");
+        char cmd[CMD_MAX_LEN];
+        printf("Please input a command--- > ");
         scanf("%s", cmd);
         tDataNode *p = FindCmd(head, cmd);
         if( p == NULL)
@@ -116,16 +105,14 @@ int main()
         { 
             p->handler();
         }
-   
+
     }
 }
-
 int Help()
 {
     ShowAllCmd(head);
     return 0; 
 }
-
 int Quit()
 {
     exit(0);
