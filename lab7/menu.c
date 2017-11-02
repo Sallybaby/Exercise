@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "linktable.h"
+#include "menu.h"
 #define CMD_MAX_LEN 128
 #define DESC_LEN    1024
 #define CMD_NUM     10
