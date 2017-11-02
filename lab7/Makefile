@@ -9,8 +9,8 @@ TARGET          =  test
 OBJS            =  linktable.o menu.o test.o
 
 all:    $(OBJS)
-    $(CC)    $(CC_OUTPUT_FLAGS)    $(TARGET)    $(OBJS)
+	$(CC)    $(CC_OUTPUT_FLAGS)    $(TARGET)    $(OBJS)
 .c.o:
-    $(CC)    $(CC_FLAGS)    $<
+	$(CC)    $(CC_FLAGS)    $<
 clean:
-    $(RM)    $(RM_FLAGS)    $(OBJS)    $(TARGET)    *.bak
+	$(RM)    $(RM_FLAGS)    $(OBJS)    $(TARGET)    *.bak

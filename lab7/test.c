@@ -74,7 +74,7 @@ int PlusFunc(int argc, char **argv)
 }
 int main(int argc, char **argv)
 {
-    MenuConfig("version", "xxx v1.0(Menu program v3.0.0 inside)", NULL);
+    MenuConfig("version", "Sally v7.0", NULL);
     MenuConfig("ls", "test arg option", ls);
     MenuConfig("quit", "quit from the menu", Quit);
     MenuConfig("hello","hello cmd",HelloFunc);
